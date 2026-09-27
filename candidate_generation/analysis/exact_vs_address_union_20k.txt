@@ -1,0 +1,36 @@
+Sample: 20,000 of 2,206,821 S1 entities (stride 110), same sampler as previous bounded experiments.
+Stage 2 config: min_shared_tokens=2, cap=5,000, stopwords=161 (current list + DF > 0.5%); 28,108 distinct query tokens.
+Loaded ground truth for 20,000 and Stage 1 candidates for 20,000 sampled S1 ids (reused train_candidate_pairs_exact_name.tsv).
+Built pruned S2/S3 address indexes in 1500.5s.
+
+======================================================================================
+EXACT-NAME vs ADDRESS vs UNION  (sample 20,000 S1; 18,883 with >=1 true match; 69,238 true pairs)
+======================================================================================
+Metric                                          Exact-name       Address         Union
+--------------------------------------------------------------------------------------
+CANDIDATE VOLUME
+  Candidate pairs                                  212,167    19,943,597    20,143,346
+  Mean candidates/S1                                 10.61        997.18       1007.17
+  Median candidates/S1                                 1.0         145.0         165.0
+  Max candidates/S1                                    405        24,654        24,654
+  Zero-candidate %                                 27.385%        0.820%        0.275%
+PAIR-LEVEL RECALL (true S1-candidate pairs recovered / all true pairs)
+  Recovered true pairs                              15,684        54,640        57,979
+  Pair-level recall                               22.6523%      78.9162%      83.7387%
+ENTITY-LEVEL COVERAGE (S1 entities with >=1 true match recovered / entities with >=1 true match)
+  Entities covered                                  10,638        17,709        18,248
+  Entity-level coverage                           56.3364%      93.7828%      96.6372%
+
+TRUE-PAIR OVERLAP (of 69,238 true pairs)
+  Recovered by BOTH:                12,345  (17.8298%)
+  Recovered ONLY by exact-name:      3,339  (4.8225%)
+  Recovered ONLY by address:        42,295  (61.0864%)
+  Recovered by NEITHER:             11,259  (16.2613%)
+
+INCREMENTAL CONTRIBUTION OF ADDRESS BLOCKING OVER EXACT-NAME
+  Address-only recovered true pairs:            42,295
+  Pair recall:  union - exact = 83.7387% - 22.6523% = +61.0864 pts
+  Entity coverage: union - exact = 96.6372% - 56.3364% = +40.3008 pts (+7,610 entities)
+  Extra candidate pairs added by address over exact: 19,931,179
+
+Total runtime: 1582.4s

@@ -1,0 +1,53 @@
+{
+  "s1_rows": 100000,
+  "exact": {
+    "pairs": 1058058,
+    "mean": 10.58058,
+    "median": 1.0,
+    "max": 429,
+    "zero_pct": 27.512999999999998
+  },
+  "address": {
+    "pairs": 8493263,
+    "mean": 84.93263,
+    "median": 36.0,
+    "max": 200,
+    "zero_pct": 2.763
+  },
+  "rare": {
+    "pairs": 2450753,
+    "mean": 24.50753,
+    "median": 0.0,
+    "max": 200,
+    "zero_pct": 66.053
+  },
+  "union": {
+    "pairs": 11816508,
+    "mean": 118.16508,
+    "median": 99.0,
+    "max": 604,
+    "zero_pct": 0.477
+  },
+  "exact_only": 972691,
+  "address_only": 8353539,
+  "rare_only": 2326651,
+  "channel_overlap_pairs": 185566,
+  "config": {
+    "min_shared_tokens": 2,
+    "posting_cap": 5000,
+    "top_k": 200,
+    "rare_min_df": 1,
+    "rare_max_df": 200
+  },
+  "stopwords": 161,
+  "out": "candidate_generation/output/pilot_100k_candidate_pairs.tsv",
+  "out_bytes": 153588475,
+  "runtime_s": {
+    "s1_vocabulary": 12.922991752624512,
+    "target_index": 552.8255591392517,
+    "candidate_generation": 269.8535237312317,
+    "total": 835.8065755367279
+  },
+  "peak_memory_mb": 1258.6328125,
+  "resumed_from_row": 0
+}

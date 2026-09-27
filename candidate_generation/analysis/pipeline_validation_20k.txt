@@ -1,0 +1,54 @@
+========================================================================================================
+PRODUCTION PIPELINE -- 20k VALIDATION (distinct-token address semantics)
+========================================================================================================
+Run: run_candidate_pipeline.py --sample-size 20000 (stride-110 sample, same as all experiments); config {'min_shared_tokens': 2, 'posting_cap': 5000, 'top_k': 200, 'rare_min_df': 1, 'rare_max_df': 200}; stopwords 161.
+Ground truth: 18,883 S1 with >=1 true match, 69,238 true pairs (scoring only).
+
+INTEGRITY CHECKS
+  [PASS] pilot rows == sampled S1 ids, same order
+  [PASS] sample identical to previous experiments
+  [PASS] no duplicate S1 rows
+  [PASS] each pilot row == sorted(exact | address | rare)
+  [PASS] candidate ids unique within each row
+  [PASS] only S2-/S3- ids
+  [PASS] metrics of pilot file == metrics of channel union
+
+RUNTIME / MEMORY (from pilot_candidate_pairs.summary.json)
+  S1 vocabulary pass 4s; S2/S3 index pass 987s; candidate generation 62s; total 1053s
+  peak memory (peak working set): 1,142 MB; pilot file 30,314,459 bytes
+
+CHANNELS AND FINAL UNION (new)
+  metric                              exact-name address top-200       rare-name           UNION
+  candidate pairs                        212,167       1,677,756         478,551       2,331,992
+  mean candidates/S1                       10.61           83.89           23.93          116.60
+  median candidates/S1                       1.0            34.0             0.0            95.0
+  max candidates/S1                          405             200             200             604
+  zero-candidate %                       27.385%          2.570%         66.730%          0.460%
+  true pairs recovered                    15,684          53,980          19,014          60,362
+  pair-level recall                     22.6523%        77.9630%        27.4618%        87.1805%
+  entities covered                        10,638          17,636           6,141          18,382
+  entity-level coverage                 56.3364%        93.3962%        32.5213%        97.3468%
+  pairs only from this channel           195,247       1,650,244         454,295
+  true pairs only from channel             2,309          31,109           2,899
+  channel overlap (pairs counted in >1 channel): 36,482
+
+COMPARISON WITH PREVIOUS 20k EXPERIMENT (repeated-token semantics, rare DF<=200)
+                  prev pairs     new pairs      change  prev true  new true   change  prev recall  new recall
+  exact              212,167       212,167          +0     15,684    15,684       +0     22.6523%    22.6523%
+  address          2,478,702     1,677,756    -800,946     54,099    53,980     -119     78.1348%    77.9630%
+  rare               478,551       478,551          +0     19,014    19,014       +0     27.4618%    27.4618%
+  union            3,132,683     2,331,992    -800,691     60,437    60,362      -75     87.2888%    87.1805%
+  union entity coverage: prev 97.3839% -> new 97.3468%
+
+WHY THE ADDRESS CHANNEL CHANGED (previous top-200 vs new top-200, per S1)
+  S1 whose address list changed: 18,902 of 20,000
+  pairs REMOVED (in previous top-200, not in new): 960,822 (true pairs among them: 213)
+    distinct shared qualifying tokens of removed pairs: 0: 0, 1: 805,681, 2: 134,464, 3+: 20,677
+    distinct shared tokens of REMOVED TRUE pairs: 0: 0, 1: 102, 2: 91, 3+: 20
+  pairs ADDED (in new top-200, not in previous): 159,876 (true pairs among them: 94; of those, 21 were already retrieved before top-200 in the previous run)
+    distinct shared qualifying tokens of added pairs: 0: 0, 1: 0, 2: 139,610, 3+: 20,266
+  Reading: removed pairs with <2 distinct shared tokens were admitted before only because a token
+  repeated in an address was counted twice; they are now excluded by design. Their freed top-200 slots
+  are refilled from the remaining (>=2 distinct) pool, and because each target is now posted at most
+  once per token, the 5,000 posting cap reaches more distinct rows. Removed pairs with >=2 distinct
+  shared tokens left through those rank/cap shifts or the new entity_id tie-break.

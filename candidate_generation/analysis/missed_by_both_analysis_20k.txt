@@ -1,0 +1,236 @@
+====================================================================================================
+TRUE PAIRS MISSED BY BOTH exact-name AND top-200 address (bounded 20k sample; analysis only)
+====================================================================================================
+Sample: 20,000 of 2,206,821 S1 (stride 110); true pairs 69,238; recovered by exact U top-200 57,558 (83.13%); MISSED BY BOTH 11,680 (16.87%).
+Recovered pairs are shown alongside as a reference distribution.
+Similarity definitions: name tokens = normalize_business_name split on spaces, len >= 2; address qualifying tokens = address_blocking_keys minus the 161 stopwords; char sim = 3-gram Jaccard of the normalized strings; 'similar' threshold = 0.5.
+One S2/S3 pass (address index + name DF + target rows): 794s; descriptors: 7.7s.
+
+1. SOURCE BREAKDOWN
+    S2: missed 5,101 of 33,383 true pairs (15.28% of S2 true pairs; 43.67% of all misses)
+    S3: missed 6,579 of 35,855 true pairs (18.35% of S3 true pairs; 56.33% of all misses)
+
+2. NAME SIMILARITY (S1 vs true target)
+    normalized name exactly equal                        missed       0 (  0.00%)   recovered  15,684 ( 27.25%)
+    name empty on either side                            missed       0 (  0.00%)   recovered       0 (  0.00%)
+    same name token set, different order                 missed   1,118 (  9.57%)   recovered   3,714 (  6.45%)
+    one name's tokens a strict subset of the other       missed   3,479 ( 29.79%)   recovered  13,679 ( 23.77%)
+    abbreviation-like (initials / token prefix)          missed   1,448 ( 12.40%)   recovered   5,744 (  9.98%)
+
+  name token Jaccard
+          bucket    missed  missed %  recovered  recov %
+       [0.0,0.1)     2,352    20.14%      8,475   14.72%
+       [0.1,0.2)        72     0.62%        227    0.39%
+       [0.2,0.3)       392     3.36%      1,502    2.61%
+       [0.3,0.4)       697     5.97%      2,511    4.36%
+       [0.4,0.5)       381     3.26%      1,346    2.34%
+       [0.5,0.6)     1,796    15.38%      6,374   11.07%
+       [0.6,0.7)     3,088    26.44%     11,104   19.29%
+       [0.7,0.8)     1,208    10.34%      4,465    7.76%
+       [0.8,0.9)       576     4.93%      2,151    3.74%
+       [0.9,1.0)         0     0.00%          5    0.01%
+             1.0     1,118     9.57%     19,398   33.70%
+    median: missed 0.600 | recovered 0.667
+
+  name char 3-gram Jaccard
+          bucket    missed  missed %  recovered  recov %
+       [0.0,0.1)     1,458    12.48%      4,551    7.91%
+       [0.1,0.2)        79     0.68%        340    0.59%
+       [0.2,0.3)       250     2.14%      1,027    1.78%
+       [0.3,0.4)       630     5.39%      2,404    4.18%
+       [0.4,0.5)       917     7.85%      3,834    6.66%
+       [0.5,0.6)     1,476    12.64%      5,798   10.07%
+       [0.6,0.7)     1,597    13.67%      5,930   10.30%
+       [0.7,0.8)     2,274    19.47%      7,741   13.45%
+       [0.8,0.9)     2,705    23.16%      9,276   16.12%
+       [0.9,1.0)       286     2.45%        923    1.60%
+             1.0         8     0.07%     15,734   27.34%
+    median: missed 0.667 | recovered 0.765
+
+3. ADDRESS SIMILARITY
+    normalized address empty on either side              missed   2,165 ( 18.54%)   recovered     831 (  1.44%)
+    retrieved by address channel (before top-200)        missed     421 (  3.60%)   recovered  54,219 ( 94.20%)
+
+  qualifying-token Jaccard (what top-200 ranks on)
+          bucket    missed  missed %  recovered  recov %
+       [0.0,0.1)     3,477    29.77%      1,060    1.84%
+       [0.1,0.2)       782     6.70%        197    0.34%
+       [0.2,0.3)     1,885    16.14%        860    1.49%
+       [0.3,0.4)     1,546    13.24%      1,205    2.09%
+       [0.4,0.5)       341     2.92%      1,750    3.04%
+       [0.5,0.6)     1,444    12.36%      6,643   11.54%
+       [0.6,0.7)       687     5.88%      7,312   12.70%
+       [0.7,0.8)       123     1.05%      4,402    7.65%
+       [0.8,0.9)        30     0.26%      4,134    7.18%
+       [0.9,1.0)         0     0.00%        233    0.40%
+             1.0     1,365    11.69%     29,762   51.71%
+    median: missed 0.250 | recovered 1.000
+
+  raw normalized-token Jaccard (incl. stopwords)
+          bucket    missed  missed %  recovered  recov %
+       [0.0,0.1)     2,274    19.47%        860    1.49%
+       [0.1,0.2)       672     5.75%        251    0.44%
+       [0.2,0.3)     1,662    14.23%      1,123    1.95%
+       [0.3,0.4)     1,688    14.45%      2,735    4.75%
+       [0.4,0.5)     1,360    11.64%      4,392    7.63%
+       [0.5,0.6)     1,403    12.01%      7,731   13.43%
+       [0.6,0.7)     1,031     8.83%     10,633   18.47%
+       [0.7,0.8)       647     5.54%      9,815   17.05%
+       [0.8,0.9)       469     4.02%      6,941   12.06%
+       [0.9,1.0)        61     0.52%      1,908    3.31%
+             1.0       413     3.54%     11,169   19.40%
+    median: missed 0.375 | recovered 0.714
+
+  address char 3-gram Jaccard
+          bucket    missed  missed %  recovered  recov %
+       [0.0,0.1)     2,206    18.89%        837    1.45%
+       [0.1,0.2)       599     5.13%        192    0.33%
+       [0.2,0.3)     1,420    12.16%        898    1.56%
+       [0.3,0.4)     1,451    12.42%      1,884    3.27%
+       [0.4,0.5)     1,351    11.57%      3,340    5.80%
+       [0.5,0.6)     1,430    12.24%      6,900   11.99%
+       [0.6,0.7)     1,231    10.54%     10,417   18.10%
+       [0.7,0.8)       926     7.93%     11,965   20.79%
+       [0.8,0.9)       648     5.55%     10,522   18.28%
+       [0.9,1.0)       125     1.07%      2,919    5.07%
+             1.0       293     2.51%      7,684   13.35%
+    median: missed 0.409 | recovered 0.736
+
+  shared distinct qualifying tokens
+          bucket    missed  missed %  recovered  recov %
+               0     3,446    29.50%      1,054    1.83%
+               1     4,565    39.08%      1,414    2.46%
+               2     2,784    23.84%     14,515   25.22%
+               3       731     6.26%     19,418   33.74%
+              4+       154     1.32%     21,157   36.76%
+
+  shared numeric tokens
+          bucket    missed  missed %  recovered  recov %
+               0     9,193    78.71%     23,425   40.70%
+               1     2,450    20.98%     30,953   53.78%
+               2        37     0.32%      2,915    5.06%
+              3+         0     0.00%        265    0.46%
+
+  S1 qualifying-token count
+          bucket    missed  missed %  recovered  recov %
+               0        63     0.54%         15    0.03%
+               1       746     6.39%        227    0.39%
+               2     3,038    26.01%      6,192   10.76%
+               3     3,770    32.28%     21,947   38.13%
+               4     1,717    14.70%     12,720   22.10%
+               5       930     7.96%      6,387   11.10%
+              6+     1,416    12.12%     10,070   17.50%
+
+  target qualifying-token count
+          bucket    missed  missed %  recovered  recov %
+               0     2,837    24.29%        927    1.61%
+               1     2,064    17.67%        530    0.92%
+               2     3,213    27.51%      7,451   12.95%
+               3     2,471    21.16%     21,194   36.82%
+               4       857     7.34%     12,548   21.80%
+               5       204     1.75%      5,819   10.11%
+              6+        34     0.29%      9,089   15.79%
+
+  S1 raw normalized-token count
+          bucket    missed  missed %  recovered  recov %
+               0         0     0.00%          0    0.00%
+               1         0     0.00%          0    0.00%
+               2         0     0.00%          0    0.00%
+               3         4     0.03%         12    0.02%
+               4       209     1.79%        941    1.63%
+               5     3,319    28.42%     16,229   28.20%
+               6     1,801    15.42%     10,404   18.08%
+               7     1,458    12.48%      6,535   11.35%
+               8       959     8.21%      4,515    7.84%
+               9       697     5.97%      3,334    5.79%
+             10+     3,233    27.68%     15,588   27.08%
+
+4. COUNTRY AGREEMENT
+    missed     same: 11,680 (100.00%)  different: 0 (0.00%)  missing: 0 (0.00%)
+    recovered  same: 57,558 (100.00%)  different: 0 (0.00%)  missing: 0 (0.00%)
+
+5. SCRIPT VARIATION
+    dominant script of names differs                     missed   1,245 ( 10.66%)   recovered   3,559 (  6.18%)
+    dominant script of addresses differs                 missed      11 (  0.09%)   recovered       9 (  0.02%)
+    top name script transitions among misses: LATIN->DEVANAGARI 744, LATIN->KANNADA 129, LATIN->TELUGU 112, LATIN->TAMIL 84, LATIN->BENGALI 71, LATIN->GUJARATI 63
+
+6. PRIMARY FAILURE CATEGORY (exclusive, assigned in this priority order)
+    missing address (S1 or target)                       2,165 ( 18.54%)   S2 1,077 / S3 1,088
+    script/transliteration variation                     1,247 ( 10.68%)   S2 748 / S3 499
+    address retrieved but ranked > 200                     351 (  3.01%)   S2 72 / S3 279
+    name & address both similar (blocking-rule gap)      3,027 ( 25.92%)   S2 1,678 / S3 1,349
+    name similar, address heavily changed                2,748 ( 23.53%)   S2 651 / S3 2,097
+    address similar, name heavily changed                1,130 (  9.67%)   S2 601 / S3 529
+    both name and address heavily changed                1,012 (  8.66%)   S2 274 / S3 738
+    Secondary (non-exclusive) name patterns within misses: word order 1,118; token subset 3,479; abbreviation-like 1,448
+
+    Examples per category (S1 name | S1 address  ==>  target name | target address):
+    [missing address (S1 or target)]
+      'Ramos and Benham Fusion' | 'Burrell, PA, 378 Devinney Hollow Road'  ==>  'Ramos and Benham' | ''
+      'Narvaez Vanguard Solutions' | '1070 County Road 2269, Cleveland, TX'  ==>  'Narvaez Vánguard Solutions' | ''
+      'Myriam Lilly Modern Ready LLC' | '35 Dover Court, Riverhead, NY'  ==>  'Myriam Ltilsy Modern Ready LLC' | ''
+      'Physical Therapy Associates Inc' | '1219 Siniard Drive, Huntsville, AL'  ==>  'Physical Therapy Associates Enterprises' | ''
+    [script/transliteration variation]
+      'Shakti Global' | '2-40-314/C Ambedkar Nagar, Balamrai, Gymkhana, Hyd'  ==>  'శక్తి గ్లోబల్' | 'Ambedkar Nagar, NULL, Hyderabad, TG'
+      'Shakti Global' | '2-40-314/C Ambedkar Nagar, Balamrai, Gymkhana, Hyd'  ==>  'శక్తి గ్లోబల్' | 'TG, Hyderabad, Ambedkar Nagar, NULL'
+      'City Foundation Private Limited' | 'G-23, Sector 27, Noida, Gautam Buddha Nagar, Uttar'  ==>  'सिटी फाउंडेशन प्राइवेट लिमिटेड' | 'G-23, NOIDA, GAUTAM BUDDHA NAGAR, Uttar Pradesh'
+      'Great Media Private Limited' | 'C-410, Defence Colony, New Delhi, New Delhi, South'  ==>  'ग्रेट मीडिया प्राइवेट लिमिटेड' | 'DEFENCE COLONY, NEW DELHI, NEW DELHI, Delhi, C-041'
+    [address retrieved but ranked > 200]
+      'Swajan Holdings' | '14 Df, Scheme No.74-C, Vijay Nagar, Indore, Madhya'  ==>  'Swajan Hóldings' | 'N/A, Door No 14 Df, Indore, मध्य प्रदेश'
+      'SZ Optics Inc' | '3948 Foothill Road, Santa Barbara, CA'  ==>  'SZ Optics' | '394 Foothill Rd, SANA Barbara, California'
+      'SZ Optics Inc' | '3948 Foothill Road, Santa Barbara, CA'  ==>  'SZ Optics' | '394 Foothill Road, SANA Barbara, California'
+      'SZ Optics Inc' | '3948 Foothill Road, Santa Barbara, CA'  ==>  'SZ 0ptics' | '394 Foothill Rd, SANA Barbara, California'
+    [name & address both similar (blocking-rule gap)]
+      'Sector & Co of Noida' | 'D-72, Sector-55 Noida Gautam Budh Nagar, Noida, Ga'  ==>  'SECTOR & CO OF  NOIA' | 'D-##72, SECTOR-55 NOIDA GAUTAM BUDH NAGAR, NOIDA, '
+      'Sector & Co of Noida' | 'D-72, Sector-55 Noida Gautam Budh Nagar, Noida, Ga'  ==>  'SECTOR & CO OF NOIDA [LTD]' | 'Uttar Pradesh, D-##72, SECTOR-55 NOIDA GAUTAM BUDH'
+      'Sector & Co of Noida' | 'D-72, Sector-55 Noida Gautam Budh Nagar, Noida, Ga'  ==>  'Sector & Co-of Noida' | 'D-##72, SECTOR-55 NOIDA GAUTAM BUDH NAGAR, NOIDA, '
+      'Zephio Fact LLC' | '3002 37th Street, Lubbock, TX'  ==>  'ZEPHIO (FACT)' | '3002- 37TH ST, LUBBOCK CPD, TX'
+    [name similar, address heavily changed]
+      'Shakti Global' | '2-40-314/C Ambedkar Nagar, Balamrai, Gymkhana, Hyd'  ==>  'Mr Shakti  Global Co' | 'Ambedkar Nagar, NULL, Hyderabad, TG'
+      'Goan Highway Private Limited' | '254, Sachidanand Nagar, Indore, Madhya Pradesh'  ==>  '... Goan Private Highway Limited' | '00254, Sachidanand Nagar, Indore, Indore Phooti Ko'
+      'Best Investment Private Limited' | '33/615/2, Kerala, Thrissur, Chelakkottukara, Thris'  ==>  'Best Investment Prívate Ltd' | '4-33/615/2, Thrissur, കേരളം'
+      'Gulf Services LP' | '449 27th Street, Ogden City, UT'  ==>  'Gulf Services #22407' | '44 27th Street, Ogden, Utah'
+    [address similar, name heavily changed]
+      'Sector & Co of Noida' | 'D-72, Sector-55 Noida Gautam Budh Nagar, Noida, Ga'  ==>  'Gilddova' | 'D-72, Sector-55 Noida Gautam Budh Nagar, Noida, Ga'
+      'Global Trust' | 'Redlands, CO, 620 19 1/2 Road'  ==>  'Global Trúst' | '20 19 1/2 Rd, Redlands, Colorado'
+      'Zephio Fact LLC' | '3002 37th Street, Lubbock, TX'  ==>  '@zephiofact' | '3002- 37TH ST, LUBBOCK CPD, TX'
+      'Electronic Digital Collective LLC' | '1638 Windriver Road, Clarksville, TN'  ==>  '@electronicdigital' | '1638-1640 WINDRIVER RD, CLARKSVILE, TN'
+    [both name and address heavily changed]
+      'Swajan Holdings' | '14 Df, Scheme No.74-C, Vijay Nagar, Indore, Madhya'  ==>  'Swajan Hóldings' | '14 Df, N/A, Indore, MP'
+      'Lotus Urban Engineering Private Limited' | 'Lucknow, 0, Gram Maunda, Uttar Pradesh, C/O Mitras'  ==>  'lotusurbanengineering.com' | 'C/o Mitrasen, Lucknow, UP'
+      'Unique Construction Private Limited' | '23A, Floor-Grd, Plot-222, Chhota Sonapur Compound,'  ==>  'Unique Consfcltion Private-Limited' | '0023A, Bombay, Mumbai City, MH'
+      'Satya Bar Private Limited' | '6Th Floor, Bakhtawar, B & C, 229, Nariman Point, M'  ==>  'Satya-Bar Private Limited' | '6Th Floor, Mumbai, महाराष्ट्र, Mumbai City'
+
+====================================================================================================
+7. THIRD-CHANNEL SIZING (estimates only; nothing implemented)
+====================================================================================================
+  Rare-name-token retrieval: for each S1, take its k rarest normalized-name tokens whose combined
+  S2+S3 document frequency <= maxDF; a target is retrieved if its name contains any selected token.
+  Volume = sum of selected tokens' DF (exact for k=1, UPPER BOUND for k>1 because a target sharing
+  several selected tokens is counted once per token); duplicates with existing channels not removed.
+  'new' = missed-by-both pairs recovered; 'overlap' = already-recovered pairs also hit.
+     k  maxDF  new pairs  +recall   overlap    vol (20k)  mean/S1  median     max S1 w/ token  vol x110 (full est)
+     1     50      1,202    1.74%     7,018       68,551      3.4     0.0      50       14.6%            7,563,989
+     1    200      2,879    4.16%    16,135      498,202     24.9     0.0     200       33.3%           54,972,132
+     1  1,000      4,236    6.12%    23,501    1,819,040     91.0     0.0     999       48.0%          200,714,784
+     1  5,000      5,342    7.72%    30,662    9,187,451    459.4    52.0   4,984       64.9%        1,013,752,990
+     2     50      1,218    1.76%     7,056       71,431      3.6     0.0      87       14.6%            7,881,772
+     2    200      2,970    4.29%    16,434      598,167     29.9     0.0     375       33.3%           66,002,375
+     2  1,000      4,396    6.35%    24,078    2,541,723    127.1     0.0   1,956       48.0%          280,456,385
+     2  5,000      5,698    8.23%    31,870   18,664,474    933.2   156.0   9,877       64.9%        2,059,457,659
+     3     50      1,218    1.76%     7,056       71,558      3.6     0.0     103       14.6%            7,895,785
+     3    200      2,970    4.29%    16,434      600,600     30.0     0.0     419       33.3%           66,270,835
+     3  1,000      4,396    6.35%    24,081    2,599,878    130.0     0.0   2,430       48.0%          286,873,268
+     3  5,000      5,704    8.24%    31,902   20,976,024   1048.8   169.0  10,547       64.9%        2,314,516,513
+
+  Character n-gram name retrieval potential (recall ceiling only; volume not estimated here --
+  3-gram postings over 10.3M names are far denser than token postings):
+    missed pairs with name char 3-gram Jaccard >= 0.3: 9,893 (84.70% of misses, +14.29 pts recall ceiling)
+    missed pairs with name char 3-gram Jaccard >= 0.5: 8,346 (71.46% of misses, +12.05 pts recall ceiling)
+    missed pairs with name char 3-gram Jaccard >= 0.7: 5,273 (45.15% of misses, +7.62 pts recall ceiling)
+    missed pairs sharing >= 1 name token (any DF): 9,328 (79.86% of misses) -- ceiling for any token-based name channel
+  Another address signal: missed pairs sharing >= 1 numeric qualifying address token: 2,487 (21.29% of misses); sharing exactly 1 qualifying token: 4,565
+
+  Reference point k=2, maxDF=1,000: +4,396 new true pairs (+6.35 pts), overlap 24,078, <= 2,541,723 candidates on 20k (<= ~280M at full scale, before dedup with other channels)
+
+Total runtime: 875s

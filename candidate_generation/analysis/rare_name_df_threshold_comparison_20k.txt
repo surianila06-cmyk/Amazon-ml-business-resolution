@@ -1,0 +1,65 @@
+==============================================================================================================
+SAME-COUNTRY RARE-NAME-TOKEN: DF THRESHOLD COMPARISON (bounded 20k sample; experiment only)
+==============================================================================================================
+Sample: 20,000 of 2,206,821 S1 (stride 110); 18,883 S1 with >=1 true match; 69,238 true pairs.
+Baseline = exact-name U top-200 address, from saved top200_address_candidates_20k.tsv + train_candidate_pairs_exact_name.tsv (no address regeneration); baseline true hits cross-checked against true_pair_status.tsv (57,558, match).
+Name DF/postings: built by one name-only S2/S3 pass and saved to rare_name_postings_20k.tsv (172s). Channel: rarest name token (len>=2) with 1<=DF<=threshold, same-country candidates only.
+
+1. ELIGIBLE TOKENS AND DF OF THE TOKEN USED
+                                        A: DF<=200        B: DF<=500      C: DF<=1,000
+    S1 with eligible token            6,654 (33.3%)      8,595 (43.0%)      9,603 (48.0%)
+    1                                           11                11                11
+    DF 2-5                                     245               245               245
+    DF 6-20                                  1,082             1,082             1,082
+    DF 21-50                                 1,585             1,585             1,585
+    DF 51-100                                1,554             1,554             1,554
+    DF 101-200                               2,177             2,177             2,177
+    DF 201-500                                   0             1,941             1,941
+    DF 501-1000                                  0                 0             1,008
+    median DF of used token                     62                94               112
+    mean DF of used token                     74.9             129.8             189.4
+
+2. RARE-NAME CHANNEL ONLY (same country)
+    metric                                      A: DF<=200        B: DF<=500      C: DF<=1,000
+    candidate pairs                                478,551         1,014,228         1,617,905
+    mean candidates/S1                               23.93             50.71             80.90
+    median candidates/S1                               0.0               0.0               0.0
+    max candidates/S1                                  200               500               997
+    zero-candidate %                               66.730%           57.025%           51.985%
+    true pairs recovered                            19,014            24,696            27,737
+    pair-level recall                             27.4618%          35.6683%          40.0604%
+    entities covered                                 6,141             7,950             8,889
+    entity-level coverage                         32.5213%          42.1014%          47.0741%
+
+3. UNION WITH BASELINE (exact-name U top-200 address U rare-name)
+    metric                                        Baseline          Base U A          Base U B          Base U C
+    total union candidates                       2,678,617         3,132,683         3,660,348         4,259,498
+    mean candidates/S1                              133.93            156.63            183.02            212.97
+    median candidates/S1                             165.0             200.0             200.0             200.0
+    max candidates/S1                                  604               604               697             1,194
+    zero-candidate %                                0.275%            0.120%            0.090%            0.080%
+    true pairs recovered                            57,558            60,437            61,330            61,794
+    pair-level recall                             83.1307%          87.2888%          88.5785%          89.2487%
+    entities covered                                18,222            18,389            18,441            18,462
+    entity-level coverage                         96.4995%          97.3839%          97.6593%          97.7705%
+    incremental true pairs over base                     -             2,879             3,772             4,236
+    pair recall gain (pts)                               -           +4.1581           +5.4479           +6.1180
+    entity coverage gain (pts)                           -           +0.8844           +1.1598           +1.2710
+    new candidates added                                 -           454,066           981,731         1,580,881
+    candidate volume increase                            -            +17.0%            +36.7%            +59.0%
+    overlap with baseline                                -            24,485            32,497            37,024
+    new candidates per new true pair                     -             157.7             260.3             373.2
+
+4. RECALL vs CANDIDATE-VOLUME TRADEOFF
+    baseline: 2,678,617 candidates, 83.1307% pair recall, 46.5 candidates per recovered true pair
+    A: DF<=200   +  454,066 candidates (+ 17.0%) for +2,879 true pairs (+4.158 pts):  157.7 new candidates per new true pair
+    B: DF<=500   +  981,731 candidates (+ 36.7%) for +3,772 true pairs (+5.448 pts):  260.3 new candidates per new true pair | marginal step from A: +527,665 cand for +893 true (590.9/pair)
+    C: DF<=1,000 +1,580,881 candidates (+ 59.0%) for +4,236 true pairs (+6.118 pts):  373.2 new candidates per new true pair | marginal step from B: +599,150 cand for +464 true (1291.3/pair)
+
+5. FULL-SCALE VOLUME ESTIMATE (measured 20k volume x 110.34)
+    baseline ~295.6M
+    A: DF<=200   rare ~52.8M; new over baseline ~50.1M; union ~345.7M
+    B: DF<=500   rare ~111.9M; new over baseline ~108.3M; union ~403.9M
+    C: DF<=1,000 rare ~178.5M; new over baseline ~174.4M; union ~470.0M
+
+Total runtime: 181s

@@ -1,0 +1,50 @@
+========================================================================================================================================
+EXACT-NAME UNION FILTERED-ADDRESS -- bounded comparison (analysis only)
+========================================================================================================================================
+Sample: 20,000 of 2,206,821 S1 (stride 110); 18,883 S1 with >=1 true match; 69,238 true pairs.
+Stage 1: train_candidate_pairs_exact_name.tsv (reused). Stage 2 retrieval: min_shared_tokens=2, cap=5,000, stopwords=161 (current + DF > 0.5%); unfiltered 19,943,597 pairs.
+Pair-level recall = true (S1, candidate) pairs recovered / all true pairs.
+Entity-level coverage = S1 with >=1 true match recovered / S1 with >=1 true match.
+Candidate ids regenerated in 407s and verified position-by-position against the feature cache; no address features or char similarity recomputed.
+
+UNION CONFIGURATIONS (exact-name UNION filtered address)
+Metric                                                             Exact U A                     Exact U B                     Exact U C
+----------------------------------------------------------------------------------------------------------------------------------------
+  Exact-name candidate pairs                                         212,167                       212,167                       212,167
+  Address candidate pairs (filtered)                               3,315,024                     3,815,923                     2,478,702
+  Union candidate pairs                                            3,514,912                     4,015,770                     2,678,617
+  Overlap (in both candidate sets)                                    12,279                        12,320                        12,252
+  Mean candidates/S1                                                  175.75                        200.79                        133.93
+  Median candidates/S1                                                  29.0                          43.0                         165.0
+  Max candidates/S1                                                    7,742                        10,071                           604
+  Zero-candidate %                                                    0.370%                        0.350%                        0.275%
+  True pairs recovered                                                57,517                        57,733                        57,558
+  Pair-level recall                                                 83.0714%                      83.3834%                      83.1307%
+  Entities covered                                                    18,231                        18,240                        18,222
+  Entity-level coverage                                             96.5472%                      96.5948%                      96.4995%
+  False candidate pairs                                            3,457,395                     3,958,037                     2,621,059
+  True pairs: recovered by BOTH                                       12,249                        12,290                        12,225
+  True pairs: ONLY exact-name (incremental)                            3,435                         3,394                         3,459
+  True pairs: ONLY address (incremental)                              41,833                        42,049                        41,874
+  True pairs: missed by BOTH                                          11,721                        11,505                        11,680
+  Recall gain of union over exact-name                          +60.4191 pts                  +60.7311 pts                  +60.4784 pts
+  Recall gain of union over address alone                        +4.9611 pts                   +4.9019 pts                   +4.9958 pts
+
+ADDRESS-ONLY METRICS (filtered address candidates, no exact-name)
+Metric                                                       A: Jaccard>=0.3 B: Jaccard>=0.3 OR numeric>=1      C: top-200/S1 by Jaccard
+----------------------------------------------------------------------------------------------------------------------------------------
+  Candidate pairs                                                  3,315,024                     3,815,923                     2,478,702
+  Mean candidates/S1                                                  165.75                        190.80                        123.94
+  Median candidates/S1                                                  21.0                          33.0                         145.0
+  Max candidates/S1                                                    7,716                        10,050                           200
+  Zero-candidate %                                                    1.120%                        0.995%                        0.820%
+  True pairs recovered                                                54,082                        54,339                        54,099
+  Pair-level recall                                                 78.1103%                      78.4815%                      78.1348%
+  Entities covered                                                    17,683                        17,696                        17,660
+  Entity-level coverage                                             93.6451%                      93.7139%                      93.5233%
+  False candidate pairs                                            3,260,942                     3,761,584                     2,424,603
+
+EXACT-NAME ONLY (reference): pairs 212,167; mean 10.61; median 1.0; max 405; zero 27.385%; true 15,684; pair recall 22.6523%; entity coverage 56.3364%; false 196,483
+Unfiltered reference (previous run): exact U address = 20,143,346 pairs, 57,979 true, 83.7387% pair recall, 96.6372% entity coverage.
+
+Runtime: A 2.1s; B 2.6s; C 6.2s (union evaluation); total script 424s

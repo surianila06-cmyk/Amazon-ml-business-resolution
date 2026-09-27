@@ -1,0 +1,58 @@
+Loading ground truth from dataset/train/train_ground_truth.tsv ...
+  2,206,821 ground-truth rows loaded.
+
+Source-2 row count (for reduction ratio): 5,034,616
+Source-3 row count (for reduction ratio): 5,285,603
+
+Scoring candidate_generation/output/train_candidate_pairs.tsv ...
+  scored 500,000 entities...
+  scored 1,000,000 entities...
+  scored 1,500,000 entities...
+  scored 2,000,000 entities...
+  done: scored 2,206,821 entities.
+
+==============================================================================
+TOTAL S1 ENTITIES:                       2,206,821
+==============================================================================
+
+--- S2 CANDIDATES ---
+  Total candidate pairs: 147,817,378
+  Mean candidates per S1 entity: 66.9820
+  Median candidates per S1 entity: 49.0
+  Max candidates for one S1 entity: 625
+  S1 entities with zero candidates: 35,731 (1.619%)
+  S1 entities with >=1 true match (in this scope): 1,919,076
+  Entity-level candidate coverage (>=1 true match retrieved): 92.9013% (1,782,846 / 1,919,076)
+  Total true pairs (this scope): 3,693,619
+  Recovered true pairs: 3,265,329
+  Pair-level recall: 88.4046%
+  False candidate pairs (not true matches): 144,552,049
+  Candidate reduction ratio (vs. brute-force 2,206,821 x 5,034,616): 99.998670%
+
+--- S3 CANDIDATES ---
+  Total candidate pairs: 112,990,518
+  Mean candidates per S1 entity: 51.2006
+  Median candidates per S1 entity: 40.0
+  Max candidates for one S1 entity: 571
+  S1 entities with zero candidates: 34,765 (1.575%)
+  S1 entities with >=1 true match (in this scope): 1,940,545
+  Entity-level candidate coverage (>=1 true match retrieved): 92.1535% (1,788,280 / 1,940,545)
+  Total true pairs (this scope): 3,944,746
+  Recovered true pairs: 3,410,243
+  Pair-level recall: 86.4503%
+  False candidate pairs (not true matches): 109,580,275
+  Candidate reduction ratio (vs. brute-force 2,206,821 x 5,285,603): 99.999031%
+
+--- COMBINED S2+S3 CANDIDATES ---
+  Total candidate pairs: 260,807,896
+  Mean candidates per S1 entity: 118.1826
+  Median candidates per S1 entity: 99.0
+  Max candidates for one S1 entity: 1,196
+  S1 entities with zero candidates: 10,655 (0.483%)
+  S1 entities with >=1 true match (in this scope): 2,083,574
+  Entity-level candidate coverage (>=1 true match retrieved): 97.4277% (2,029,978 / 2,083,574)
+  Total true pairs (this scope): 7,638,365
+  Recovered true pairs: 6,675,572
+  Pair-level recall: 87.3953%
+  False candidate pairs (not true matches): 254,132,324
+  Candidate reduction ratio (vs. brute-force 2,206,821 x 10,320,219): 99.998855%

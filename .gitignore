@@ -6,3 +6,16 @@ output/
 *.tar.gz
 .ipynb_checkpoints/
 __pycache__/
+
+# Role 2 candidate generation
+# Note: output/ above ignores candidate_generation/output/, but four small Role 2
+# run-summary files there are intentionally tracked (committed explicitly):
+#   train_candidate_pairs.summary.json, train_candidate_pairs_eval_log.txt,
+#   pilot_candidate_pairs.summary.json, pilot_100k_candidate_pairs.summary.json
+# Changes to them must be staged with `git add -f`.
+*.py[cod]
+candidate_generation/analysis/inspection_output.txt
+candidate_generation/analysis/inspection_ground_truth_output.txt
+*.tsv.partial
+*.checkpoint.json
+*.checkpoint.json.tmp

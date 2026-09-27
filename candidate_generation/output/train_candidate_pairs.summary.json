@@ -1,0 +1,53 @@
+{
+  "s1_rows": 2206821,
+  "exact": {
+    "pairs": 23402481,
+    "mean": 10.60461224539734,
+    "median": 1,
+    "max": 997,
+    "zero_pct": 27.57255799179
+  },
+  "address": {
+    "pairs": 187742011,
+    "mean": 85.07351117285906,
+    "median": 36,
+    "max": 200,
+    "zero_pct": 2.7997739735121248
+  },
+  "rare": {
+    "pairs": 53757182,
+    "mean": 24.35955702796013,
+    "median": 0,
+    "max": 200,
+    "zero_pct": 66.03245120469671
+  },
+  "union": {
+    "pairs": 260807896,
+    "mean": 118.18262378326108,
+    "median": 99,
+    "max": 1196,
+    "zero_pct": 0.4828212165825864
+  },
+  "exact_only": 21526952,
+  "address_only": 184661126,
+  "rare_only": 51009744,
+  "channel_overlap_pairs": 4093778,
+  "config": {
+    "min_shared_tokens": 2,
+    "posting_cap": 5000,
+    "top_k": 200,
+    "rare_min_df": 1,
+    "rare_max_df": 200
+  },
+  "stopwords": 161,
+  "out": "candidate_generation/output/train_candidate_pairs.tsv",
+  "out_bytes": 3389897080,
+  "runtime_s": {
+    "s1_vocabulary": 149.666818857193,
+    "target_index": 704.037083864212,
+    "candidate_generation": 8984.83608841896,
+    "total": 9843.94741678238
+  },
+  "peak_memory_mb": 1869.4609375,
+  "resumed_from_row": 0
+}
